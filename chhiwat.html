@@ -1,0 +1,913 @@
+<title>chhiwat</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@500;700;800&family=Tajawal:wght@400;500;700;800&display=swap">
+<style>
+/* Layout: one phone-width column. Warm kitchen palette (chili red, saffron, dark roast brown) with line-drawn
+   kitchen doodles (spoon, fork, tagine, chili, lemon, olive) as the recurring motif. No green anywhere. */
+:root{
+  --bg:#FFF4E4;
+  --surface:#FFFFFF;
+  --ink:#2B1710;
+  --muted:#7C6256;
+  --line:#F1DEC6;
+  --chili:#D9381E;
+  --on-chili:#FFFFFF;
+  --chili-soft:#FFE2D6;
+  --saf:#F4A81D;
+  --on-saf:#2B1710;
+  --saf-soft:#FFEBBD;
+  --roast:#3A1F16;
+  --st-new:#F4A81D;
+  --st-cook:#E4590F;
+  --st-out:#2E6FD8;
+  --st-done:#7B3F8C;
+  --ov:rgba(30,12,6,.55);
+  --font-display:'Baloo Bhaijaan 2','Tajawal',Tahoma,sans-serif;
+  --font-body:'Tajawal',Tahoma,'Segoe UI',sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#1D1210;--surface:#2B1B16;--ink:#FDEFE0;--muted:#C9AE9E;--line:#45302A;
+    --chili:#FF6B4A;--on-chili:#2A0E06;--chili-soft:#4C2118;--saf:#FFC247;--saf-soft:#4B3813;
+    --roast:#120907;--ov:rgba(0,0,0,.68);color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1D1210;--surface:#2B1B16;--ink:#FDEFE0;--muted:#C9AE9E;--line:#45302A;
+  --chili:#FF6B4A;--on-chili:#2A0E06;--chili-soft:#4C2118;--saf:#FFC247;--saf-soft:#4B3813;
+  --roast:#120907;--ov:rgba(0,0,0,.68);color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:16px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--bg)}
+button,input,select,textarea{font:inherit;color:inherit}
+#root{max-width:560px;margin:0 auto;min-height:100vh}
+h1,h2,h3{font-family:var(--font-display);margin:0;text-wrap:balance;line-height:1.3;font-weight:700}
+h2{font-size:1.3rem}h3{font-size:1.1rem}
+p{margin:0}
+.muted{color:var(--muted)}
+.small{font-size:.86rem}
+.num{font-variant-numeric:tabular-nums}
+:focus-visible{outline:3px solid var(--saf);outline-offset:2px}
+svg.ic{width:1.15em;height:1.15em;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+svg.ic.fill{fill:currentColor}
+
+/* header */
+.hd{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.logo{display:flex;align-items:center;gap:8px;margin-inline-end:auto;min-width:0}
+.logo svg{width:40px;height:40px;flex:none;display:block}
+.wm{font-family:var(--font-display);font-weight:800;font-size:1.55rem;color:var(--chili);letter-spacing:.01em;direction:ltr;line-height:1}
+.wm small{display:block;font-family:var(--font-body);font-size:.68rem;font-weight:700;color:var(--muted);letter-spacing:0;direction:rtl;margin-top:2px}
+.city{display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:6px 12px}
+.city select{border:0;background:transparent;appearance:none;-webkit-appearance:none;font-weight:700;padding:0 2px;min-width:0;max-width:30vw}
+.icon-btn{background:var(--surface);border:1px solid var(--line);border-radius:999px;width:42px;height:42px;display:grid;place-items:center;cursor:pointer;flex:none}
+
+.page{padding-block:16px 150px;display:flex;flex-direction:column;gap:16px}
+.stack{display:flex;flex-direction:column;gap:14px}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:14px;padding:12px 16px;font-weight:800;cursor:pointer;background:var(--chili);color:var(--on-chili);min-height:48px;text-align:center}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+.btn.saf{background:var(--saf);color:var(--on-saf)}
+.btn.roast{background:var(--roast);color:#FFF4E4}
+.btn.cook{background:var(--st-cook);color:#fff}
+.btn.blue{background:var(--st-out);color:#fff}
+.btn.violet{background:var(--st-done);color:#fff}
+.btn.big{min-height:64px;font-size:1.2rem;border-radius:18px;width:100%}
+.btn.sm{min-height:40px;padding:6px 14px;border-radius:10px;font-size:.92rem}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.row{display:flex;gap:10px;align-items:center}
+.row.wrap{flex-wrap:wrap}
+.grow{flex:1;min-width:0}
+
+/* cards */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:14px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.dish{display:grid;grid-template-columns:112px 1fr;gap:12px;align-items:stretch}
+.dish .body{display:flex;flex-direction:column;gap:6px;min-width:0}
+.dish .name{font-weight:800;font-size:1.05rem;line-height:1.35}
+.thumb{width:100%;aspect-ratio:1/1;border-radius:16px;overflow:hidden;background:var(--saf-soft);display:block;position:relative}
+.thumb svg,.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.thumb.lg{width:84px;flex:none}
+.price{font-weight:800;color:var(--chili);font-size:1.12rem}
+.chip{display:inline-flex;align-items:center;gap:4px;background:var(--chili-soft);color:var(--chili);border-radius:999px;padding:2px 10px;font-size:.8rem;font-weight:800}
+.chip.saf{background:var(--saf-soft);color:var(--ink)}
+.chip.line{background:transparent;border:1px solid var(--line);color:var(--muted);font-weight:700}
+/* Darija tags are drawn as small tilted stickers so they read as marketing, not UI */
+.tag{display:inline-block;background:var(--saf);color:var(--on-saf);font-family:var(--font-display);font-weight:800;font-size:.85rem;padding:0 10px;border-radius:8px;transform:rotate(-3deg);line-height:1.6}
+.tag.red{background:var(--chili);color:var(--on-chili)}
+.star{color:var(--saf)}
+.sec{display:flex;align-items:center;gap:10px;margin-top:6px}
+.sec .bar{flex:1;height:2px;background:repeating-linear-gradient(90deg,var(--line) 0 8px,transparent 8px 14px)}
+
+/* search and categories */
+.search{display:flex;align-items:center;gap:10px;background:var(--surface);border:1.5px solid var(--line);border-radius:16px;padding:0 14px;min-height:50px}
+.search input{border:0;background:transparent;flex:1;min-width:0;outline:none;min-height:46px}
+.cats{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+.cats::-webkit-scrollbar{display:none}
+.cat{flex:none;border:1.5px solid var(--line);background:var(--surface);border-radius:999px;padding:8px 16px;font-weight:700;cursor:pointer;white-space:nowrap}
+.cat[aria-pressed="true"]{background:var(--roast);border-color:var(--roast);color:#FFF4E4}
+
+/* banners */
+.banners{position:relative}
+.banner{position:relative;overflow:hidden;border-radius:22px;padding:18px 18px 22px;min-height:164px;display:flex;flex-direction:column;justify-content:center;gap:6px;width:100%;border:0;text-align:start;cursor:pointer}
+.banner h2{font-size:1.65rem;line-height:1.25;max-width:78%}
+.banner p{font-weight:700;max-width:78%}
+.banner .tag{align-self:flex-start;margin-bottom:4px}
+.banner .dd{position:absolute;inset:0;width:100%;height:100%;opacity:.2;pointer-events:none}
+.banner .big-art{position:absolute;inset-inline-end:-14px;bottom:-14px;width:46%;max-width:190px;aspect-ratio:1;border-radius:50%;overflow:hidden;border:5px solid rgba(255,255,255,.55)}
+.banner .big-art svg{width:100%;height:100%;display:block}
+.dots{display:flex;justify-content:center;gap:6px;margin-top:10px}
+.dots button{width:9px;height:9px;border-radius:50%;border:0;background:var(--line);padding:0;cursor:pointer}
+.dots button[aria-current="true"]{background:var(--chili);width:24px;border-radius:6px}
+
+/* sheet / modal */
+.ov{position:fixed;inset:0;background:var(--ov);z-index:50;display:flex;align-items:flex-end;justify-content:center}
+.ov.mid{align-items:center}
+.sheet{width:100%;max-width:560px;max-height:92vh;overflow:auto;background:var(--bg);border-radius:26px 26px 0 0;padding:14px 16px;padding-bottom:max(20px,env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:14px;animation:up .22s ease-out}
+.sheet.center{border-radius:24px;margin:16px;width:auto}
+.grab{width:44px;height:5px;border-radius:9px;background:var(--line);align-self:center;flex:none}
+@keyframes up{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){.sheet{animation:none}}
+
+/* bottom nav + floating cart bar */
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:25;background:var(--surface);border-top:1px solid var(--line);
+  padding-top:6px;padding-bottom:max(6px,env(safe-area-inset-bottom,0px));padding-left:max(8px,env(safe-area-inset-left,0px));padding-right:max(8px,env(safe-area-inset-right,0px))}
+.nav .in{max-width:560px;margin:0 auto;display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:4px}
+.tab{position:relative;border:0;background:transparent;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 4px;border-radius:14px;color:var(--muted);cursor:pointer;font-weight:700;font-size:.82rem}
+.tab svg.ic{width:1.5em;height:1.5em}
+.tab[aria-current="page"]{color:var(--chili);background:var(--chili-soft)}
+.badge{position:absolute;top:2px;inset-inline-start:calc(50% + 6px);background:var(--chili);color:var(--on-chili);border-radius:999px;min-width:20px;height:20px;font-size:.75rem;display:grid;place-items:center;padding:0 5px}
+.fab{position:fixed;left:0;right:0;z-index:24;bottom:calc(74px + env(safe-area-inset-bottom,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));pointer-events:none}
+.fab .btn{max-width:528px;margin:0 auto;width:100%;justify-content:space-between;pointer-events:auto;box-shadow:0 8px 24px rgba(60,20,8,.28);min-height:56px;border-radius:18px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(92px + env(safe-area-inset-bottom,0px));background:var(--roast);color:#FFF4E4;padding:10px 16px;border-radius:12px;z-index:60;font-weight:700;max-width:90vw}
+
+/* forms */
+.field{display:flex;flex-direction:column;gap:6px}
+.field label,.lbl{font-weight:800;font-size:.92rem}
+.inp{width:100%;background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:12px;min-height:50px}
+.inp.ltr{direction:ltr;text-align:left;letter-spacing:.05em}
+textarea.inp{min-height:84px;resize:vertical}
+.opt{display:flex;align-items:center;gap:10px;border:1.5px solid var(--line);border-radius:14px;padding:10px 12px;cursor:pointer;background:var(--surface);min-height:50px;text-align:start;width:100%}
+.opt[aria-pressed="true"],.opt[aria-checked="true"]{border-color:var(--chili);background:var(--chili-soft)}
+.opt .dot{width:22px;height:22px;border-radius:50%;border:2px solid var(--line);flex:none;display:grid;place-items:center}
+.opt.sq .dot{border-radius:7px}
+.opt[aria-pressed="true"] .dot,.opt[aria-checked="true"] .dot{background:var(--chili);border-color:var(--chili);color:var(--on-chili)}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+.stepper{display:flex;align-items:center;gap:6px}
+.stepper button{width:42px;height:42px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);cursor:pointer;display:grid;place-items:center}
+.stepper b{min-width:28px;text-align:center}
+
+/* welcome */
+.welcome{padding-block:max(16px,env(safe-area-inset-top,0px)) 40px;display:flex;flex-direction:column;gap:22px}
+.hero{position:relative;overflow:hidden;border-radius:28px;background:var(--chili);color:var(--on-chili);padding:28px 22px 30px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px}
+.hero .dd{position:absolute;inset:0;width:100%;height:100%;opacity:.22;pointer-events:none;color:#FFE9B0}
+.hero .logo-big{width:112px;height:112px;position:relative;filter:drop-shadow(0 8px 14px rgba(60,20,8,.3))}
+.hero .wm-big{font-family:var(--font-display);font-weight:800;font-size:3.3rem;line-height:1;direction:ltr;position:relative;color:#FFF4E4}
+.hero .ar{font-family:var(--font-display);font-size:1.25rem;position:relative}
+.hero .sticker{position:relative;transform:rotate(-4deg);margin-top:6px}
+.role{display:flex;align-items:center;gap:14px;text-align:start;border:2px solid var(--line);background:var(--surface);border-radius:22px;padding:16px;cursor:pointer;width:100%}
+.role:hover{border-color:var(--chili)}
+.role .ico{width:58px;height:58px;border-radius:18px;display:grid;place-items:center;background:var(--chili);color:var(--on-chili);flex:none}
+.role.cook .ico{background:var(--saf);color:var(--on-saf)}
+.role .ico svg.ic{width:30px;height:30px}
+.role b{font-family:var(--font-display);font-size:1.2rem;display:block}
+
+/* orders */
+.status{display:flex;align-items:center;gap:6px;font-weight:800;border-radius:999px;padding:4px 14px;color:#fff;font-size:.9rem;width:fit-content}
+.st-new{background:var(--st-new);color:#2B1710}
+.st-cooking{background:var(--st-cook)}
+.st-out{background:var(--st-out)}
+.st-done{background:var(--st-done)}
+.lines{display:flex;flex-direction:column;gap:10px}
+.line{display:flex;gap:12px;align-items:center}
+.sum{display:flex;flex-direction:column;gap:6px}
+.sum .r{display:flex;justify-content:space-between;gap:10px}
+.sum .tot{font-weight:800;font-size:1.15rem;border-top:2px dashed var(--line);padding-top:8px}
+.note{background:var(--saf-soft);border-radius:14px;padding:10px 12px;font-size:.92rem}
+.thread{display:flex;flex-direction:column;gap:8px;border-top:2px dashed var(--line);padding-top:10px}
+.msg{display:flex;flex-direction:column;gap:2px}
+.msg.mine{align-items:flex-start}
+.msg.theirs{align-items:flex-end}
+.msg audio{max-width:100%;height:40px}
+.filebtn{position:relative;overflow:hidden;cursor:pointer}
+.filebtn input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;font-size:0}
+.kanban-h{display:flex;align-items:center;gap:8px}
+.kanban-h i{width:16px;height:16px;border-radius:50%;display:block;flex:none}
+.empty{position:relative;overflow:hidden;text-align:center;padding:36px 12px;color:var(--muted);display:flex;flex-direction:column;gap:8px;align-items:center;border:2px dashed var(--line);border-radius:22px}
+.stars{display:flex;gap:4px}
+.stars button{background:none;border:0;cursor:pointer;padding:2px;color:var(--line)}
+.stars button.on{color:var(--saf)}
+.stars svg.ic{width:32px;height:32px}
+.reply{background:var(--saf-soft);border-radius:14px;padding:8px 12px;font-size:.92rem}
+.photo-prev{width:100%;max-width:220px;aspect-ratio:4/3;border-radius:16px;overflow:hidden;background:var(--saf-soft);border:2px dashed var(--line);display:grid;place-items:center;color:var(--muted)}
+.photo-prev img{width:100%;height:100%;object-fit:cover}
+
+/* chat */
+.sheet.chat{height:90vh;padding-bottom:0;gap:0;overflow:hidden}
+.chat-h{display:flex;align-items:center;gap:10px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.chat-body{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding:12px 0}
+.bubble{max-width:82%;padding:8px 12px;border-radius:18px;display:flex;flex-direction:column;gap:2px;overflow-wrap:anywhere}
+.bubble.mine{align-self:flex-start;background:var(--chili);color:var(--on-chili);border-end-start-radius:6px}
+.bubble.theirs{align-self:flex-end;background:var(--surface);border:1px solid var(--line);border-end-end-radius:6px}
+.bubble.sys{align-self:center;background:var(--saf-soft);font-size:.82rem;font-weight:700;border-radius:999px;padding:4px 14px;text-align:center;max-width:94%}
+.bubble time{font-size:.7rem;opacity:.75;align-self:flex-end;direction:ltr}
+.bubble audio{width:220px;max-width:100%;height:40px}
+.quick{display:flex;gap:8px;overflow-x:auto;padding:8px 0;scrollbar-width:none}
+.quick::-webkit-scrollbar{display:none}
+.quick button{flex:none;border:1.5px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 14px;cursor:pointer;font-size:.88rem;font-weight:700;white-space:nowrap}
+.composer{display:flex;align-items:center;gap:8px;padding:8px 0;padding-bottom:max(12px,env(safe-area-inset-bottom,0px));border-top:1px solid var(--line)}
+.composer .inp{border-radius:999px;min-height:46px;padding:8px 16px}
+.round{width:46px;height:46px;border-radius:50%;border:0;display:grid;place-items:center;cursor:pointer;flex:none;background:var(--chili);color:var(--on-chili);position:relative;overflow:hidden}
+.round.ghost{background:var(--surface);color:var(--chili);border:1.5px solid var(--line)}
+.round[disabled]{opacity:.4;cursor:not-allowed}
+.round input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;font-size:0}
+.inbox-row{display:flex;align-items:center;gap:12px;width:100%;text-align:start;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:12px;cursor:pointer}
+.avatar{width:48px;height:48px;border-radius:50%;background:var(--saf);color:var(--on-saf);display:grid;place-items:center;font-family:var(--font-display);font-weight:800;flex:none}
+.usernote{background:var(--saf-soft);border-inline-start:4px solid var(--chili);border-radius:10px;padding:6px 10px;font-size:.9rem;font-weight:700;margin-top:6px;overflow-wrap:anywhere}
+.usernote span{color:var(--chili);font-weight:800}
+.sugs{display:flex;flex-wrap:wrap;gap:6px}
+.sugs button{border:1.5px solid var(--line);background:var(--surface);border-radius:999px;padding:4px 12px;font-size:.85rem;font-weight:700;cursor:pointer}
+.sugs button[aria-pressed="true"]{background:var(--chili-soft);border-color:var(--chili);color:var(--chili)}
+.charcount{font-size:.78rem;color:var(--muted);align-self:flex-end}
+.inbox-row .pv{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+</style>
+
+<div id="root"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/htm@3.1.1/dist/htm.umd.js"></script>
+<script>
+try{document.documentElement.setAttribute('dir','rtl');document.documentElement.setAttribute('lang','ar');}catch(e){}
+const {useState,useEffect,useRef}=React;
+const html=htm.bind(React.createElement);
+
+/* ---------- constants ---------- */
+const CITIES=['الرباط','الدار البيضاء','مراكش','طنجة','فاس','أكادير','مكناس','وجدة','تطوان','القنيطرة'];
+const DEPOSIT=40, DELIVERY=20;
+const SUGS=['بدون بصل','بدون ثوم','بدون كزبرة','بدون زيتون','بدون توابل حارة','الصلصة على جنب'];
+const SPICE={normal:'عادي',mild:'خفيف',hot:'حار جدًا'};
+const KINDS=[['tagine','طاجين'],['couscous','كسكس'],['soup','حساء'],['pastilla','بسطيلة'],['bread','خبز ومعجنات'],['other','أخرى']];
+const STATUS_LABEL={new:'بانتظار المطبخ',cooking:'قيد التحضير',out:'في الطريق إليك',outPickup:'جاهز للاستلام',done:'تم التسليم'};
+const uid=()=>Math.random().toString(36).slice(2,9);
+const money=n=>n+' د.م';
+const KEY='chhiwat-v2';
+
+/* ---------- seed ---------- */
+function seed(){
+  const kitchens=[
+    {id:'k1',name:'مطبخ الحاجة فاطمة',city:'الرباط'},
+    {id:'k2',name:'دار ماما زينب',city:'الدار البيضاء'},
+    {id:'k3',name:'مطبخ لالة خديجة',city:'مراكش'},
+    {id:'k4',name:'مطبخ رقية',city:'طنجة'},
+    {id:'k5',name:'دار لالة مليكة',city:'فاس'},
+    {id:'k6',name:'مطبخ أم يوسف',city:'أكادير'},
+    {id:'k7',name:'مطبخ السيدة سعيدة',city:'الرباط'}
+  ];
+  const d=(id,kitchenId,name,price,kind,lead,clay,featured)=>({id,kitchenId,name,price,kind,lead,clay,featured,available:true,photo:null});
+  const dishes=[
+    d('d1','k1','طاجين الدجاج بالزيتون والليمون',65,'tagine',60,true,true),
+    d('d2','k1','كسكس بالخضار السبع',55,'couscous',90,true,false),
+    d('d3','k1','حريرة فاسية',20,'soup',30,false,false),
+    d('d4','k7','مسمن ورغايف بالعسل',30,'bread',25,false,true),
+    d('d5','k7','طاجين الكفتة بالبيض',50,'tagine',45,true,false),
+    d('d6','k2','بسطيلة الحمام',95,'pastilla',120,false,true),
+    d('d7','k2','طاجين اللحم بالبرقوق',85,'tagine',90,true,false),
+    d('d8','k3','طنجية مراكشية',90,'tagine',180,true,true),
+    d('d9','k3','سفة بالدجاج',60,'couscous',75,true,false),
+    d('d10','k4','سمك بالشرمولة',80,'tagine',60,true,true),
+    d('d11','k4','بيصارة',18,'soup',20,false,false),
+    d('d12','k5','بسطيلة فاسية بالسمك',100,'pastilla',120,false,true),
+    d('d13','k6','طاجين السمك',75,'tagine',60,true,true)
+  ];
+  const reviews=[
+    {id:'r1',kitchenId:'k1',who:'ياسين',stars:5,text:'طاجين لذيذ جدًا ووصل ساخنًا.',reply:''},
+    {id:'r2',kitchenId:'k1',who:'سلمى',stars:5,text:'الكسكس يشبه كسكس بيت الجدة.',reply:'بالصحة والهناء!'},
+    {id:'r3',kitchenId:'k2',who:'عمر',stars:4,text:'البسطيلة رائعة، لكن التوصيل تأخر قليلًا.',reply:''},
+    {id:'r4',kitchenId:'k3',who:'هند',stars:5,text:'طنجية مراكشية أصيلة.',reply:''},
+    {id:'r5',kitchenId:'k7',who:'مهدي',stars:4,text:'المسمن طري وطعمه ممتاز.',reply:''}
+  ];
+  return {auth:{role:null,phone:'',verified:false},city:'الرباط',kitchenId:null,kitchens,dishes,reviews,orders:[],cart:{kitchenId:null,lines:[]},delivery:'glovo',address:'',seq:100};
+}
+function load(){
+  try{const raw=localStorage.getItem(KEY);if(raw){const s=JSON.parse(raw);if(s&&s.kitchens&&s.dishes)return s;}}catch(e){}
+  return seed();
+}
+function save(S){
+  try{
+    const copy={...S,orders:S.orders.map(o=>({...o,msgs:(o.msgs||[]).filter(m=>!(m.url||'').startsWith('blob:'))}))};
+    localStorage.setItem(KEY,JSON.stringify(copy));
+  }catch(e){}
+}
+
+/* ---------- icons ---------- */
+const P={
+  mic:'<path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/>',
+  camera:'<path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/>',
+  image:'<rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/>',
+  cart:'<circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>',
+  plus:'<path d="M5 12h14"/><path d="M12 5v14"/>',
+  minus:'<path d="M5 12h14"/>',
+  check:'<path d="M20 6 9 17l-5-5"/>',
+  star:'<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>',
+  pin:'<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>',
+  truck:'<path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/>',
+  home:'<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>',
+  chef:'<path d="M6 13.87A4 4 0 0 1 7.41 6a5.11 5.11 0 0 1 1.05-1.54 5 5 0 0 1 7.08 0A5.11 5.11 0 0 1 16.59 6 4 4 0 0 1 18 13.87V21H6Z"/><line x1="6" x2="18" y1="17" y2="17"/>',
+  user:'<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+  trash:'<path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>',
+  phone:'<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>',
+  out:'<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/>',
+  list:'<line x1="8" x2="21" y1="6" y2="6"/><line x1="8" x2="21" y1="12" y2="12"/><line x1="8" x2="21" y1="18" y2="18"/><line x1="3" x2="3.01" y1="6" y2="6"/><line x1="3" x2="3.01" y1="12" y2="12"/><line x1="3" x2="3.01" y1="18" y2="18"/>',
+  book:'<path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/>',
+  search:'<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
+  back:'<path d="m9 18 6-6-6-6"/>',
+  send:'<path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/>',
+  msg:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>'
+};
+function Ic({n,fill,style}){return html`<svg className=${'ic'+(fill?' fill':'')} viewBox="0 0 24 24" aria-hidden="true" style=${style} dangerouslySetInnerHTML=${{__html:P[n]||''}}></svg>`}
+
+/* ---------- logo: a tagine with steam, on a chili-red disc ---------- */
+function LogoMark({style,className}){
+  return html`<svg className=${className} style=${style} viewBox="0 0 64 64" role="img" aria-label="شعار chhiwat">
+    <circle cx="32" cy="32" r="32" fill="#D9381E"/>
+    <circle cx="32" cy="32" r="29" fill="none" stroke="#FFE9B0" stroke-width="1.5" stroke-dasharray="2 4" opacity=".7"/>
+    <rect x="11" y="44" width="42" height="6" rx="3" fill="#FFF4E4"/>
+    <path d="M16 44C17 34 24 28 32 28S47 34 48 44Z" fill="#FFF4E4"/>
+    <path d="M21 39h22" stroke="#F4A81D" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="1 5"/>
+    <circle cx="32" cy="25" r="3.4" fill="#F4A81D"/>
+    <path d="M25.5 19c-3-3 3-5 0-9M38.5 19c-3-3 3-5 0-9" fill="none" stroke="#FFC247" stroke-width="2.6" stroke-linecap="round"/>
+  </svg>`;
+}
+function Logo({sub}){
+  return html`<div className="logo"><${LogoMark}/><div className="wm">chhiwat${sub?html`<small>شهيوات الدار</small>`:null}</div></div>`;
+}
+
+/* ---------- kitchen doodle pattern ---------- */
+let ddN=0;
+function Doodles({className}){
+  const id=useRef('dd'+(++ddN)).current;
+  return html`<svg className=${className} aria-hidden="true"><defs><pattern id=${id} width="120" height="120" patternUnits="userSpaceOnUse">
+    <g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <ellipse cx="20" cy="16" rx="7" ry="10"/><path d="M20 26v30"/>
+      <path d="M72 8v13a8 8 0 0 0 16 0V8M80 8v13M80 29v28"/>
+      <path d="M40 52h28M44 52c1-9 5-14 10-14s9 5 10 14M54 38v-5"/>
+      <path d="M16 78c10-2 22 4 30 16 4 6 10 8 14 6-4 8-14 8-22 2-10-8-18-14-22-24Z"/>
+      <circle cx="92" cy="92" r="14"/><circle cx="92" cy="92" r="9"/><path d="M92 83v18M83 92h18M86 86l12 12M98 86L86 98"/>
+      <ellipse cx="108" cy="34" rx="5" ry="7"/>
+    </g></pattern></defs><rect width="100%" height="100%" fill=${'url(#'+id+')'}/></svg>`;
+}
+
+/* ---------- dish artwork (drawn) ---------- */
+function Art({kind}){
+  const bg={tagine:'#FFD99A',couscous:'#FFE7A6',soup:'#FFC9A3',pastilla:'#F6D6B0',bread:'#FFE0A8',other:'#F7DDB8'}[kind]||'#FFD99A';
+  let g;
+  if(kind==='tagine') g=html`<g><ellipse cx="100" cy="130" rx="70" ry="11" fill="#6B2E17" opacity=".35"/><rect x="34" y="118" width="132" height="14" rx="7" fill="#9C3F1E"/><path d="M46 120c4-30 28-46 54-46s50 16 54 46z" fill="#C4572C"/><path d="M58 108h84" stroke="#F4A81D" stroke-width="5" stroke-dasharray="2 9" stroke-linecap="round"/><path d="M58 96h84" stroke="#FFD99A" stroke-width="3" stroke-dasharray="1 10" stroke-linecap="round"/><path d="M92 76c0-12 3-22 8-28 5 6 8 16 8 28z" fill="#9C3F1E"/><circle cx="100" cy="42" r="9" fill="#F4A81D"/><path d="M82 30c-6-6 6-10 0-18M118 30c-6-6 6-10 0-18" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".8"/></g>`;
+  else if(kind==='couscous') g=html`<g><ellipse cx="100" cy="134" rx="66" ry="8" fill="#6B2E17" opacity=".3"/><path d="M28 92h144c0 30-31 46-72 46S28 122 28 92z" fill="#B24A24"/><path d="M28 92h144" stroke="#F4A81D" stroke-width="5"/><path d="M40 92c6-34 30-54 60-54s54 20 60 54z" fill="#F7D568"/><g fill="#E4A91A"><circle cx="72" cy="70" r="3"/><circle cx="102" cy="58" r="3"/><circle cx="126" cy="76" r="3"/><circle cx="88" cy="82" r="3"/><circle cx="114" cy="88" r="3"/><circle cx="60" cy="86" r="3"/></g><circle cx="68" cy="82" r="10" fill="#E4590F"/><circle cx="134" cy="84" r="9" fill="#F08A24"/><circle cx="100" cy="50" r="9" fill="#C4572C"/><circle cx="116" cy="62" r="6" fill="#FFF4E4"/></g>`;
+  else if(kind==='soup') g=html`<g><ellipse cx="100" cy="134" rx="62" ry="8" fill="#6B2E17" opacity=".3"/><path d="M36 84h128c0 36-28 54-64 54s-64-18-64-54z" fill="#9C3F1E"/><ellipse cx="100" cy="84" rx="64" ry="11" fill="#E4590F"/><ellipse cx="100" cy="84" rx="50" ry="7" fill="#F08A24"/><circle cx="84" cy="83" r="3" fill="#FFF4E4"/><circle cx="112" cy="85" r="3" fill="#FFF4E4"/><path d="M76 66c-7-9 7-14 0-26M102 66c-7-9 7-14 0-26M128 66c-7-9 7-14 0-26" stroke="#fff" stroke-opacity=".85" stroke-width="4" fill="none" stroke-linecap="round"/></g>`;
+  else if(kind==='pastilla') g=html`<g><ellipse cx="100" cy="132" rx="72" ry="9" fill="#6B2E17" opacity=".3"/><ellipse cx="100" cy="106" rx="72" ry="30" fill="#A4602B"/><ellipse cx="100" cy="94" rx="72" ry="30" fill="#E3A957"/><g stroke="#FFF4E4" stroke-width="3.5" opacity=".9" stroke-linecap="round"><path d="M56 82l44 26M78 70l46 28M102 66l46 26M58 104l38-24M124 70l-54 32"/></g><ellipse cx="100" cy="94" rx="72" ry="30" fill="none" stroke="#8A4F1F" stroke-width="3"/><circle cx="100" cy="94" r="5" fill="#C4572C"/></g>`;
+  else if(kind==='bread') g=html`<g><ellipse cx="100" cy="134" rx="66" ry="8" fill="#6B2E17" opacity=".3"/><rect x="44" y="98" width="112" height="28" rx="8" fill="#C98A3C"/><rect x="38" y="76" width="112" height="28" rx="8" fill="#E0A94F"/><rect x="50" y="54" width="112" height="28" rx="8" fill="#F2C57A"/><path d="M68 66h72M68 74h48" stroke="#C98A3C" stroke-width="3" stroke-linecap="round"/><path d="M140 48c10-6 22 0 22 10s-14 14-22 8z" fill="#F4A81D"/></g>`;
+  else g=html`<g><ellipse cx="100" cy="134" rx="62" ry="8" fill="#6B2E17" opacity=".3"/><circle cx="100" cy="86" r="58" fill="#FFF4E4"/><circle cx="100" cy="86" r="44" fill="#F4A81D"/><circle cx="86" cy="76" r="10" fill="#C4572C"/><circle cx="114" cy="96" r="12" fill="#E4590F"/><circle cx="106" cy="68" r="7" fill="#9C3F1E"/></g>`;
+  return html`<svg viewBox="0 0 200 150" role="img" aria-label="رسم الطبق"><rect width="200" height="150" fill=${bg}/><g fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="3"><circle cx="24" cy="26" r="10"/><circle cx="176" cy="30" r="7"/><circle cx="172" cy="122" r="9"/></g>${g}</svg>`;
+}
+function Thumb({dish,lg}){return html`<div className=${'thumb'+(lg?' lg':'')}>${dish.photo?html`<img src=${dish.photo} alt=${dish.name}/>`:html`<${Art} kind=${dish.kind}/>`}</div>`}
+
+/* ---------- helpers ---------- */
+function readPhoto(file){
+  return new Promise(res=>{
+    const r=new FileReader();
+    r.onload=()=>{const img=new Image();
+      img.onload=()=>{const k=Math.min(1,640/Math.max(img.width,img.height));const c=document.createElement('canvas');c.width=Math.round(img.width*k);c.height=Math.round(img.height*k);c.getContext('2d').drawImage(img,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',.8));};
+      img.onerror=()=>res(null);img.src=r.result;};
+    r.onerror=()=>res(null);r.readAsDataURL(file);
+  });
+}
+function optLabels(o){
+  const a=[];if(o.nosugar)a.push('بدون سكر');if(o.nosalt)a.push('بدون ملح');if(o.lowoil)a.push('زيت قليل');a.push('الحرارة: '+SPICE[o.spice||'normal']);return a;
+}
+function kitchenRating(S,id){
+  const rs=S.reviews.filter(r=>r.kitchenId===id);if(!rs.length)return null;
+  return {avg:(rs.reduce((a,r)=>a+r.stars,0)/rs.length).toFixed(1),n:rs.length};
+}
+function cartTotals(S){
+  let items=0,dep=0;
+  S.cart.lines.forEach(l=>{const d=S.dishes.find(x=>x.id===l.dishId);if(!d)return;items+=d.price*l.qty;if(l.pack==='clay')dep+=DEPOSIT*l.qty;});
+  const del=S.cart.lines.length&&S.delivery==='glovo'?DELIVERY:0;
+  return {items,dep,del,total:items+dep+del};
+}
+function Stars({n}){return html`<span className="star num" aria-label=${n+' من 5'}>${'★'.repeat(n)}<span style=${{color:'var(--line)'}}>${'★'.repeat(5-n)}</span></span>`}
+function Toast({msg}){return msg?html`<div className="toast" role="status">${msg}</div>`:null}
+function Sheet({onClose,children,title,mid}){
+  return html`<div className=${'ov'+(mid?' mid':'')} onClick=${onClose}><div className=${'sheet'+(mid?' center':'')} role="dialog" aria-label=${title} onClick=${e=>e.stopPropagation()}>${mid?null:html`<div className="grab"></div>`}${children}</div></div>`;
+}
+function Header({S,up,showCity}){
+  const out=()=>up({auth:{role:null,phone:'',verified:false}});
+  return html`<header className="hd">
+    <${Logo} sub=${true}/>
+    ${showCity?html`<label className="city"><${Ic} n="pin"/>
+      <select aria-label="المدينة" value=${S.city} onChange=${e=>up({city:e.target.value})}>${CITIES.map(c=>html`<option key=${c} value=${c}>${c}</option>`)}</select></label>`:null}
+    <button className="icon-btn" aria-label="تسجيل الخروج" title="تسجيل الخروج" onClick=${out}><${Ic} n="out"/></button>
+  </header>`;
+}
+
+/* ---------- welcome + login ---------- */
+function Welcome({up}){
+  return html`<main className="welcome">
+    <section className="hero">
+      <${Doodles} className="dd"/>
+      <${LogoMark} className="logo-big"/>
+      <div className="wm-big">chhiwat</div>
+      <div className="ar">شهيوات الدار</div>
+      <p style=${{position:'relative',fontWeight:700}}>منصة تصل أطباق البيوت المغربية بمن يحبونها</p>
+      <span className="tag sticker">ماكلة د الدار، بنين بزاف!</span>
+    </section>
+    <div className="stack">
+      <span className="lbl">اختر نوع حسابك</span>
+      <button className="role" onClick=${()=>up({auth:{role:'buyer',phone:'',verified:false}})}>
+        <span className="ico"><${Ic} n="user"/></span><span><b>الزبون / المشتري</b><span className="muted small">أريد طلب أطباق منزلية</span></span></button>
+      <button className="role cook" onClick=${()=>up({auth:{role:'cook',phone:'',verified:false}})}>
+        <span className="ico"><${Ic} n="chef"/></span><span><b>الطاهية / صاحبة المطبخ</b><span className="muted small">أريد بيع أطباقي</span></span></button>
+    </div>
+    <p className="muted small">نسخة تجريبية: الرسائل النصية وتوصيل Glovo محاكاة فقط ولا يُرسل شيء فعلي.</p>
+  </main>`;
+}
+
+function Login({S,up}){
+  const [phone,setPhone]=useState('');
+  const [step,setStep]=useState('phone');
+  const [code,setCode]=useState('');
+  const [err,setErr]=useState('');
+  const clean=phone.replace(/\s/g,'');
+  const ok=/^0[5-7]\d{8}$/.test(clean);
+  const isCook=S.auth.role==='cook';
+  const verify=()=>{
+    if(code==='1234') up({auth:{...S.auth,phone:clean,verified:true}});
+    else setErr('الرمز غير صحيح. جرّب 1234');
+  };
+  return html`<main className="welcome">
+    <button className="btn ghost sm" style=${{alignSelf:'flex-start'}} onClick=${()=>up({auth:{role:null,phone:'',verified:false}})}>رجوع</button>
+    <${Logo} sub=${true}/>
+    <div className="stack" style=${{gap:'6px'}}>
+      <h2>${isCook?'تسجيل دخول صاحبة المطبخ':'تسجيل دخول الزبون'}</h2>
+      <p className="muted">${step==='phone'?'أدخل رقم هاتفك وسنرسل إليك رمز التحقق.':'أدخل رمز التحقق المكوّن من 4 أرقام.'}</p>
+    </div>
+    ${step==='phone'?html`<div className="field"><label htmlFor="ph">رقم الهاتف</label>
+      <input id="ph" className="inp ltr" type="tel" inputMode="numeric" placeholder="06 12 34 56 78" value=${phone} onInput=${e=>setPhone(e.target.value)}/>
+      <button className="btn big" disabled=${!ok} onClick=${()=>{setStep('code');setErr('');}}><${Ic} n="phone"/> إرسال الرمز</button>
+      ${phone&&!ok?html`<p className="small muted">يجب أن يبدأ الرقم بـ 05 أو 06 أو 07 ويتكوّن من 10 أرقام.</p>`:null}</div>`
+    :html`<div className="field"><label htmlFor="cd">رمز التحقق</label>
+      <input id="cd" className="inp ltr" inputMode="numeric" maxLength="4" placeholder="1234" value=${code} onInput=${e=>setCode(e.target.value.replace(/\D/g,''))}/>
+      <div className="note">هذه نسخة تجريبية ولم تُرسل رسالة فعلية. الرمز هو <b className="num">1234</b>.</div>
+      ${err?html`<p style=${{color:'var(--chili)',fontWeight:800}}>${err}</p>`:null}
+      <button className="btn big" disabled=${code.length<4} onClick=${verify}><${Ic} n="check"/> تأكيد</button>
+      <button className="btn ghost" onClick=${()=>{setStep('phone');setCode('');}}>تغيير الرقم</button></div>`}
+  </main>`;
+}
+
+function CookSetup({S,up}){
+  const [name,setName]=useState('');
+  const [city,setCity]=useState(S.city);
+  const go=()=>{
+    const kid='k'+uid();
+    const k={id:kid,name:name.trim(),city,own:true,phone:S.auth.phone};
+    const d1={id:'d'+uid(),kitchenId:kid,name:'طاجين الدجاج بالزيتون',price:60,kind:'tagine',lead:60,clay:true,featured:true,available:true,photo:null};
+    const d2={id:'d'+uid(),kitchenId:kid,name:'كسكس الجمعة',price:50,kind:'couscous',lead:90,clay:true,featured:false,available:true,photo:null};
+    up(s=>({kitchens:[...s.kitchens,k],dishes:[...s.dishes,d1,d2],kitchenId:kid,city}));
+  };
+  return html`<main className="welcome">
+    <${Logo} sub=${true}/>
+    <div className="stack" style=${{gap:'6px'}}><h2>سمِّ مطبخك</h2><p className="muted">سيظهر هذا الاسم للزبائن، ويمكنك تغييره لاحقًا.</p></div>
+    <div className="field"><label htmlFor="kn">اسم المطبخ</label><input id="kn" className="inp" placeholder="مثال: مطبخ الحاجة فاطمة" value=${name} onInput=${e=>setName(e.target.value)}/></div>
+    <div className="field"><label htmlFor="kc">المدينة</label><select id="kc" className="inp" value=${city} onChange=${e=>setCity(e.target.value)}>${CITIES.map(c=>html`<option key=${c} value=${c}>${c}</option>`)}</select></div>
+    <button className="btn big" disabled=${name.trim().length<2} onClick=${go}><${Ic} n="chef"/> ابدأ</button>
+    <p className="muted small">أضفنا طبقين كبداية لتجربة القائمة، ويمكنك حذفهما في أي وقت.</p>
+  </main>`;
+}
+
+/* ---------- buyer ---------- */
+const BANNERS=[
+  {bg:'#D9381E',fg:'#FFF4E4',tag:'نهار الجمعة',h:'كسكس الجمعة بنين بزاف!',p:'طلبو دابا ويوصلكم سخون لباب الدار',kind:'couscous',cat:'couscous'},
+  {bg:'#F4A81D',fg:'#2B1710',tag:'فخار أصلي',h:'طاجين الفخار ديال بصح',p:'ضمانة 40 درهم وكترجع ليك',kind:'tagine',cat:'tagine'},
+  {bg:'#3A1F16',fg:'#FFF4E4',tag:'على ذوقك',h:'ماكلة صحية كيفما بغيتي',p:'بلا سكر، بلا ملح، وزيت قليل',kind:'soup',cat:'soup'}
+];
+function Banners({onPick}){
+  const [i,setI]=useState(0);
+  useEffect(()=>{const t=setInterval(()=>setI(x=>(x+1)%BANNERS.length),5500);return()=>clearInterval(t);},[]);
+  const b=BANNERS[i];
+  return html`<section className="banners" aria-label="عروض">
+    <button className="banner" style=${{background:b.bg,color:b.fg}} onClick=${()=>onPick(b.cat)}>
+      <${Doodles} className="dd" />
+      <span className="tag" style=${{background:b.bg==='#F4A81D'?'#D9381E':'#F4A81D',color:b.bg==='#F4A81D'?'#FFF4E4':'#2B1710'}}>${b.tag}</span>
+      <h2>${b.h}</h2><p>${b.p}</p>
+      <span className="big-art"><${Art} kind=${b.kind}/></span>
+    </button>
+    <div className="dots">${BANNERS.map((x,n)=>html`<button key=${n} aria-label=${'العرض '+(n+1)} aria-current=${n===i} onClick=${()=>setI(n)}></button>`)}</div>
+  </section>`;
+}
+
+function Custom({dish,onAdd,onClose}){
+  const [o,setO]=useState({nosugar:false,nosalt:false,lowoil:false,spice:'normal',qty:1,pack:'box',note:''});
+  const set=p=>setO(x=>({...x,...p}));
+  const tog=k=>html`<button className="opt sq" aria-pressed=${o[k[0]]} onClick=${()=>set({[k[0]]:!o[k[0]]})}><span className="dot">${o[k[0]]?html`<${Ic} n="check"/>`:null}</span>${k[1]}</button>`;
+  const unit=dish.price+(dish.clay&&o.pack==='clay'?DEPOSIT:0);
+  const toggleSug=t=>{
+    if(o.note.includes(t)){set({note:o.note.replace(t,'').replace(/(،\s*){2,}/g,'، ').replace(/^[،\s]+|[،\s]+$/g,'')});}
+    else{set({note:((o.note.trim()?o.note.trim().replace(/[،\s]+$/,'')+'، ':'')+t).slice(0,160)});}
+  };
+  return html`<${Sheet} onClose=${onClose} title=${dish.name}>
+    <div className="row"><${Thumb} dish=${dish} lg=${true}/><div className="grow"><h3>${dish.name}</h3><div className="price num">${money(dish.price)}</div></div></div>
+    <div className="field"><span className="lbl">التفضيلات الغذائية</span>
+      <div className="opts">${tog(['nosugar','بدون سكر'])}${tog(['nosalt','بدون ملح'])}${tog(['lowoil','زيت قليل'])}</div></div>
+    <div className="field"><span className="lbl">درجة الحرارة</span>
+      <div className="opts" role="radiogroup">${Object.entries(SPICE).map(([k,v])=>html`<button key=${k} role="radio" aria-checked=${o.spice===k} className="opt" onClick=${()=>set({spice:k})}><span className="dot">${o.spice===k?html`<${Ic} n="check"/>`:null}</span>${v}</button>`)}</div></div>
+    ${dish.clay?html`<div className="field"><span className="lbl">طريقة التقديم</span>
+      <div className="opts" role="radiogroup">
+        <button role="radio" aria-checked=${o.pack==='box'} className="opt" onClick=${()=>set({pack:'box'})}><span className="dot">${o.pack==='box'?html`<${Ic} n="check"/>`:null}</span><span>علبة حرارية عادية<br/><span className="muted small num">0 د.م</span></span></button>
+        <button role="radio" aria-checked=${o.pack==='clay'} className="opt" onClick=${()=>set({pack:'clay'})}><span className="dot">${o.pack==='clay'?html`<${Ic} n="check"/>`:null}</span><span>طاجين فخار / قصعة تقليدية<br/><span className="muted small num">+${DEPOSIT} د.م ضمانة قابلة للاسترداد</span></span></button></div></div>`:null}
+    <div className="field"><label htmlFor="nt">ملاحظات خاصة للطاهية (اختياري)</label>
+      <div className="sugs">${SUGS.map(t=>html`<button key=${t} aria-pressed=${o.note.includes(t)} onClick=${()=>toggleSug(t)}>${t}</button>`)}</div>
+      <textarea id="nt" className="inp" maxLength="160" placeholder="مثال: بدون بصل، أو قدّموا الصلصة على جنب" value=${o.note} onInput=${e=>set({note:e.target.value})}></textarea>
+      <span className="charcount num">${o.note.length}/160</span></div>
+    <div className="row" style=${{justifyContent:'space-between'}}>
+      <span className="lbl">الكمية</span>
+      <div className="stepper"><button aria-label="إنقاص" onClick=${()=>set({qty:Math.max(1,o.qty-1)})}><${Ic} n="minus"/></button><b className="num">${o.qty}</b><button aria-label="زيادة" onClick=${()=>set({qty:o.qty+1})}><${Ic} n="plus"/></button></div>
+    </div>
+    <button className="btn big" onClick=${()=>onAdd(o)}><${Ic} n="cart"/> أضف إلى السلة <span className="num">${money(unit*o.qty)}</span></button>
+  <//>`;
+}
+
+function dishTags(d,r){
+  const t=[];
+  if(d.featured)t.push(['شهية اليوم',true]);
+  if(d.lead<=30)t.push(['دغيا دغيا',false]);
+  if(d.clay)t.push(['فخار أصلي',false]);
+  if(r&&Number(r.avg)>=4.8)t.push(['بنين بزاف',true]);
+  return t.slice(0,2);
+}
+function DishCard({S,d,onPick}){
+  const k=S.kitchens.find(x=>x.id===d.kitchenId);const r=kitchenRating(S,d.kitchenId);
+  const tags=dishTags(d,r);
+  return html`<article className="card dish">
+    <${Thumb} dish=${d}/>
+    <div className="body">
+      ${tags.length?html`<div className="row wrap" style=${{gap:'6px'}}>${tags.map(([t,red])=>html`<span key=${t} className=${'tag'+(red?' red':'')}>${t}</span>`)}</div>`:null}
+      <span className="name">${d.name}</span>
+      <span className="muted small">${k.name}${r?html` · <span className="star">★</span> <span className="num">${r.avg}</span> <span className="num">(${r.n})</span>`:''}</span>
+      <span className="muted small num">يجهز خلال ${d.lead} دقيقة</span>
+      <div className="row" style=${{marginTop:'auto',justifyContent:'space-between'}}><span className="price num">${money(d.price)}</span>
+        <button className="btn sm" onClick=${()=>onPick(d)}><${Ic} n="plus"/> أضف</button></div>
+    </div></article>`;
+}
+
+/* ---------- chat ---------- */
+const QUICK={
+  cook:['بدأت التحضير الآن','سيكون الطلب جاهزًا خلال 30 دقيقة','هل تريد تعديلًا على الطبق؟','هل يمكنك تأكيد العنوان؟'],
+  client:['هل بدأتم التحضير؟','هل يمكن تقليل الملح؟','أين المندوب؟','شكرًا لكم']
+};
+let tf=null;
+try{tf=new Intl.DateTimeFormat('ar-MA-u-nu-latn',{hour:'2-digit',minute:'2-digit',hour12:false});}catch(e){}
+const fmtTime=t=>{if(!t)return '';try{return tf?tf.format(new Date(t)):'';}catch(e){return '';}};
+const msgOf=m=>({...m,type:m.type||(m.url?'voice':'text'),at:m.at||0});
+const unreadOf=(o,me)=>{const seen=(o.seen&&o.seen[me])||0;return (o.msgs||[]).filter(m=>m.from!==me&&m.from!=='sys'&&(m.at||0)>seen).length;};
+const pushMsg=(up,id,msg)=>up(s=>({orders:s.orders.map(x=>x.id===id?{...x,msgs:[...(x.msgs||[]),{id:uid(),at:Date.now(),...msg}]}:x)}));
+const markSeen=(up,id,me)=>up(s=>({orders:s.orders.map(x=>x.id===id?{...x,seen:{...(x.seen||{}),[me]:Date.now()}}:x)}));
+const preview=o=>{const m=(o.msgs||[]).map(msgOf).slice(-1)[0];if(!m)return 'ابدأ المحادثة';return m.type==='voice'?'رسالة صوتية':m.text;};
+const lastAt=o=>{const m=(o.msgs||[]).slice(-1)[0];return (m&&m.at)||o.at||0;};
+
+function Chat({o,me,title,sub,up,onClose}){
+  const [text,setText]=useState('');
+  const end=useRef(null);
+  const msgs=(o.msgs||[]).map(msgOf);
+  useEffect(()=>{markSeen(up,o.id,me);},[msgs.length]);
+  useEffect(()=>{if(end.current&&end.current.scrollIntoView)end.current.scrollIntoView({block:'end'});},[msgs.length]);
+  const send=t=>{const v=(t===undefined?text:t).trim();if(!v)return;pushMsg(up,o.id,{from:me,type:'text',text:v});if(t===undefined)setText('');};
+  const onVoice=async e=>{
+    const f=e.target.files&&e.target.files[0];e.target.value='';if(!f)return;
+    let url=null;
+    if(f.size<=700*1024)url=await new Promise(r=>{const fr=new FileReader();fr.onload=()=>r(fr.result);fr.onerror=()=>r(null);fr.readAsDataURL(f);});
+    if(!url)url=URL.createObjectURL(f);
+    pushMsg(up,o.id,{from:me,type:'voice',url});
+  };
+  return html`<div className="ov" onClick=${onClose}><div className="sheet chat" role="dialog" aria-label=${'محادثة '+title} onClick=${e=>e.stopPropagation()}>
+    <div className="chat-h"><button className="icon-btn" aria-label="رجوع" onClick=${onClose}><${Ic} n="back"/></button>
+      <div className="grow"><b>${title}</b><div className="muted small">${sub}</div></div></div>
+    <div className="chat-body">
+      ${msgs.length===0?html`<p className="muted small" style=${{textAlign:'center',margin:'auto'}}>ابدأ المحادثة بكتابة رسالة أو إرسال رسالة صوتية.</p>`:null}
+      ${msgs.map(m=>m.from==='sys'?html`<div key=${m.id} className="bubble sys">${m.text}</div>`
+        :html`<div key=${m.id} className=${'bubble '+(m.from===me?'mine':'theirs')}>${m.type==='voice'?html`<audio controls src=${m.url}></audio>`:html`<span>${m.text}</span>`}<time>${fmtTime(m.at)}</time></div>`)}
+      <div ref=${end}></div>
+    </div>
+    <div className="quick">${QUICK[me].map(q=>html`<button key=${q} onClick=${()=>send(q)}>${q}</button>`)}</div>
+    <div className="composer">
+      <label className="round ghost" title="إرسال رسالة صوتية"><${Ic} n="mic"/><input type="file" accept="audio/*" capture="user" onChange=${onVoice} aria-label="إرسال رسالة صوتية"/></label>
+      <input className="inp grow" aria-label="اكتب رسالة" placeholder="اكتب رسالة" value=${text} onInput=${e=>setText(e.target.value)} onKeyDown=${e=>{if(e.key==='Enter')send();}}/>
+      <button className="round" aria-label="إرسال" disabled=${!text.trim()} onClick=${()=>send()}><${Ic} n="send" style=${{transform:'scaleX(-1)'}}/></button>
+    </div>
+  </div></div>`;
+}
+function ChatButton({o,me,onChat}){
+  const n=unreadOf(o,me);
+  return html`<button className="btn ghost sm" style=${{alignSelf:'flex-start'}} onClick=${()=>onChat(o.id)}><${Ic} n="msg"/> محادثة${n?html`<span className="chip num">${n}</span>`:null}</button>`;
+}
+function Inbox({orders,me,nameOf,onOpen}){
+  const list=orders.slice().sort((a,b)=>lastAt(b)-lastAt(a));
+  if(!list.length)return html`<div className="empty"><${Doodles} className="dd" /><${Ic} n="msg" style=${{width:'2.5em',height:'2.5em'}}/><b>لا توجد محادثات</b><span className="small">تظهر المحادثة هنا بعد أول طلب.</span></div>`;
+  return html`<div className="stack">${list.map(o=>{const n=unreadOf(o,me);const nm=nameOf(o);
+    return html`<button key=${o.id} className="inbox-row" onClick=${()=>onOpen(o.id)}>
+      <span className="avatar" aria-hidden="true">${nm.trim().split(' ').slice(-1)[0].charAt(0)||'؟'}</span>
+      <span className="grow"><b>${nm}</b><span className="muted small"> · طلب #<span className="num">${o.no}</span></span><div className=${'pv small'+(n?'':' muted')} style=${{fontWeight:n?800:400}}>${preview(o)}</div></span>
+      <span className="muted small num">${fmtTime(lastAt(o))}</span>
+      ${n?html`<span className="chip num">${n}</span>`:null}
+    </button>`;})}</div>`;
+}
+
+function OrderItems({o}){
+  return html`<div className="lines">${o.lines.map(l=>html`<div key=${l.id} className="line">
+    <${Thumb} dish=${l.dish} lg=${true}/>
+    <div className="grow"><b>${l.qty}× ${l.dish.name}</b>
+      <div className="row wrap" style=${{marginTop:'4px',gap:'6px'}}>${optLabels(l).map(t=>html`<span key=${t} className="chip">${t}</span>`)}${l.pack==='clay'?html`<span className="chip saf">طاجين فخار</span>`:html`<span className="chip line">علبة حرارية</span>`}</div>
+      ${l.note?html`<div className="usernote"><span>ملاحظة الزبون:</span> ${l.note}</div>`:null}</div></div>`)}</div>`;
+}
+
+function BuyerOrder({o,S,up,flash,onChat}){
+  const k=S.kitchens.find(x=>x.id===o.kitchenId);
+  const [stars,setStars]=useState(0);const [text,setText]=useState('');
+  const label=o.status==='out'&&o.delivery==='pickup'?STATUS_LABEL.outPickup:STATUS_LABEL[o.status];
+  const rate=()=>{
+    up(s=>({reviews:[...s.reviews,{id:uid(),kitchenId:o.kitchenId,who:'زبون',stars,text:text.trim(),reply:''}],orders:s.orders.map(x=>x.id===o.id?{...x,reviewed:true}:x)}));
+    flash('شكرًا على تقييمك');
+  };
+  return html`<article className="card">
+    <div className="row" style=${{justifyContent:'space-between'}}><b>${k?k.name:'مطبخ'}</b><span className="muted small num">#${o.no}</span></div>
+    <span className=${'status st-'+o.status}>${label}</span>
+    <${OrderItems} o=${o}/>
+    <div className="sum num">
+      <div className="r"><span>الأطباق</span><span>${money(o.items)}</span></div>
+      ${o.dep?html`<div className="r"><span>ضمانة الأواني</span><span>${money(o.dep)}</span></div>`:null}
+      <div className="r"><span>${o.delivery==='glovo'?'التوصيل (Glovo)':'استلام من المطبخ'}</span><span>${money(o.del)}</span></div>
+      <div className="r tot"><span>المجموع عند الاستلام</span><span>${money(o.total)}</span></div>
+    </div>
+    ${o.dep?html`<div className="note">${o.depositReturned?'تم إرجاع الضمانة إليك.':'تُرد الضمانة ('+o.dep+' د.م) عند إعادة الأواني إلى المطبخ أو تسليمها للمندوب في طلبك القادم.'}</div>`:null}
+    ${o.status==='out'&&o.delivery==='glovo'?html`<div className="note"><${Ic} n="truck"/> مندوب Glovo في طريقه إليك.</div>`:null}
+    <${ChatButton} o=${o} me="client" onChat=${onChat}/>
+    ${o.status==='done'&&!o.reviewed?html`<div className="thread"><span className="lbl">كيف كانت الوجبة؟</span>
+      <div className="stars">${[1,2,3,4,5].map(n=>html`<button key=${n} className=${n<=stars?'on':''} aria-label=${n+' نجوم'} onClick=${()=>setStars(n)}><${Ic} n="star" fill=${n<=stars}/></button>`)}</div>
+      <textarea className="inp" placeholder="اكتب كلمة للمطبخ" value=${text} onInput=${e=>setText(e.target.value)}></textarea>
+      <button className="btn" disabled=${!stars} onClick=${rate}>إرسال التقييم</button></div>`:null}
+  </article>`;
+}
+
+function Buyer({S,up}){
+  const [tab,setTab]=useState('menu');
+  const [pick,setPick]=useState(null);
+  const [added,setAdded]=useState(false);
+  const [conflict,setConflict]=useState(null);
+  const [msg,setMsg]=useState('');
+  const [cat,setCat]=useState('all');
+  const [q,setQ]=useState('');
+  const [chatId,setChatId]=useState(null);
+  const flash=t=>{setMsg(t);setTimeout(()=>setMsg(''),2200);};
+  const T=cartTotals(S);
+  const kitchenOf=id=>S.kitchens.find(k=>k.id===id);
+  const qn=q.trim();
+  const list=S.dishes.filter(d=>{
+    const k=kitchenOf(d.kitchenId);
+    if(!k||k.city!==S.city||!d.available)return false;
+    if(cat!=='all'&&d.kind!==cat)return false;
+    if(qn&&!(d.name.includes(qn)||k.name.includes(qn)))return false;
+    return true;
+  });
+  const feat=list.filter(d=>d.featured),rest=list.filter(d=>!d.featured);
+  const mine=S.orders.filter(o=>o.phone===S.auth.phone).sort((a,b)=>b.at-a.at);
+  const qtyAll=S.cart.lines.reduce((a,l)=>a+l.qty,0);
+  const unreadAll=mine.reduce((a,o)=>a+unreadOf(o,'client'),0);
+  const chatO=S.orders.find(o=>o.id===chatId);
+  const cats=[['all','الكل'],['tagine','طاجين'],['couscous','كسكس'],['soup','حساء'],['pastilla','بسطيلة'],['bread','خبز ومعجنات']];
+
+  const addLine=(dish,o)=>{
+    const line={id:uid(),dishId:dish.id,qty:o.qty,nosugar:o.nosugar,nosalt:o.nosalt,lowoil:o.lowoil,spice:o.spice,pack:dish.clay?o.pack:'box',note:(o.note||'').trim()};
+    if(S.cart.kitchenId&&S.cart.kitchenId!==dish.kitchenId&&S.cart.lines.length){setConflict({dish,line});setPick(null);return;}
+    up(s=>({cart:{kitchenId:dish.kitchenId,lines:[...s.cart.lines,line]}}));
+    setPick(null);setAdded(true);
+  };
+  const setQty=(id,n)=>up(s=>{const lines=s.cart.lines.map(l=>l.id===id?{...l,qty:n}:l).filter(l=>l.qty>0);return {cart:{kitchenId:lines.length?s.cart.kitchenId:null,lines}};});
+  const place=()=>{
+    const lines=S.cart.lines.map(l=>({...l,dish:S.dishes.find(d=>d.id===l.dishId)})).filter(l=>l.dish);
+    const o={id:uid(),no:S.seq+1,kitchenId:S.cart.kitchenId,phone:S.auth.phone,client:'زبون '+S.auth.phone.slice(-4),lines,items:T.items,dep:T.dep,del:T.del,total:T.total,delivery:S.delivery,address:S.address.trim(),status:'new',at:Date.now(),msgs:[{id:uid(),from:'sys',type:'sys',text:'تم إرسال الطلب إلى المطبخ',at:Date.now()}],seen:{},depositReturned:false,reviewed:false};
+    up(s=>({orders:[o,...s.orders],seq:s.seq+1,cart:{kitchenId:null,lines:[]}}));
+    setTab('orders');flash('تم إرسال الطلب إلى المطبخ');
+  };
+  const canPlace=S.cart.lines.length&&(S.delivery==='pickup'||S.address.trim().length>5);
+
+  return html`<div>
+    <${Header} S=${S} up=${up} showCity=${true}/>
+    <main className="page">
+    ${tab==='menu'?html`
+      <${Banners} onPick=${c=>{setCat(c);}}/>
+      <label className="search"><${Ic} n="search"/><input aria-label="بحث" placeholder="ابحث عن طبق أو مطبخ" value=${q} onInput=${e=>setQ(e.target.value)}/></label>
+      <div className="cats" role="group" aria-label="التصنيفات">${cats.map(([k,v])=>html`<button key=${k} className="cat" aria-pressed=${cat===k} onClick=${()=>setCat(k)}>${v}</button>`)}</div>
+      ${list.length===0?html`<div className="empty"><${Doodles} className="dd" /><${Ic} n="home" style=${{width:'2.5em',height:'2.5em'}}/><b>لا توجد أطباق مطابقة في ${S.city} حاليًا</b><span className="small">غيّر التصنيف أو البحث أو اختر مدينة أخرى من الأعلى.</span></div>`:null}
+      ${feat.length?html`<div className="sec"><h2>أطباق اليوم</h2><span className="tag red">شهيوات اليوم</span><span className="bar"></span></div>${feat.map(d=>html`<${DishCard} key=${d.id} S=${S} d=${d} onPick=${setPick}/>`)}`:null}
+      ${rest.length?html`<div className="sec"><h2>المزيد من الأطباق</h2><span className="bar"></span></div>${rest.map(d=>html`<${DishCard} key=${d.id} S=${S} d=${d} onPick=${setPick}/>`)}`:null}`:null}
+
+    ${tab==='cart'?(S.cart.lines.length===0?html`<div className="empty"><${Doodles} className="dd" /><${Ic} n="cart" style=${{width:'2.5em',height:'2.5em'}}/><b>السلة فارغة</b><span className="small">أضف طبقًا لتبدأ طلبك.</span><button className="btn" onClick=${()=>setTab('menu')}>تصفح الأطباق</button></div>`:html`
+      <div className="card"><div className="row"><${Ic} n="home"/><b>${kitchenOf(S.cart.kitchenId).name}</b></div>
+        <div className="lines">${S.cart.lines.map(l=>{const d=S.dishes.find(x=>x.id===l.dishId);if(!d)return null;return html`<div key=${l.id} className="line">
+          <${Thumb} dish=${d} lg=${true}/>
+          <div className="grow"><b>${d.name}</b>
+            <div className="row wrap" style=${{gap:'6px',margin:'4px 0'}}>${optLabels(l).map(t=>html`<span key=${t} className="chip">${t}</span>`)}${l.pack==='clay'?html`<span className="chip saf">فخار +${DEPOSIT}</span>`:null}</div>
+            ${l.note?html`<div className="usernote"><span>ملاحظتك:</span> ${l.note}</div>`:null}
+            <div className="row" style=${{justifyContent:'space-between'}}><span className="price num">${money(d.price*l.qty)}</span>
+              <div className="stepper"><button aria-label="إنقاص" onClick=${()=>setQty(l.id,l.qty-1)}><${Ic} n=${l.qty===1?'trash':'minus'}/></button><b className="num">${l.qty}</b><button aria-label="زيادة" onClick=${()=>setQty(l.id,l.qty+1)}><${Ic} n="plus"/></button></div></div></div></div>`;})}</div></div>
+      <div className="card"><span className="lbl">طريقة الاستلام</span>
+        <div className="opts" role="radiogroup">
+          <button role="radio" aria-checked=${S.delivery==='glovo'} className="opt" onClick=${()=>up({delivery:'glovo'})}><span className="dot">${S.delivery==='glovo'?html`<${Ic} n="check"/>`:null}</span><span><b>توصيل Glovo</b><br/><span className="muted small num">${money(DELIVERY)} داخل المدينة</span></span></button>
+          <button role="radio" aria-checked=${S.delivery==='pickup'} className="opt" onClick=${()=>up({delivery:'pickup'})}><span className="dot">${S.delivery==='pickup'?html`<${Ic} n="check"/>`:null}</span><span><b>استلام من المطبخ</b><br/><span className="muted small">بدون رسوم</span></span></button></div>
+        ${S.delivery==='glovo'?html`<div className="field"><label htmlFor="ad">عنوان التوصيل</label><textarea id="ad" className="inp" placeholder="الحي، الشارع، رقم المنزل" value=${S.address} onInput=${e=>up({address:e.target.value})}></textarea></div>`:null}
+        <div className="note">الدفع عند الاستلام: تدفع المبلغ عند وصول طلبك.</div></div>
+      <div className="card sum num">
+        <div className="r"><span>الأطباق</span><span>${money(T.items)}</span></div>
+        ${T.dep?html`<div className="r"><span>ضمانة الأواني (قابلة للاسترداد)</span><span>${money(T.dep)}</span></div>`:null}
+        <div className="r"><span>${S.delivery==='glovo'?'التوصيل':'الاستلام'}</span><span>${money(T.del)}</span></div>
+        <div className="r tot"><span>المجموع</span><span>${money(T.total)}</span></div></div>
+      <button className="btn big" disabled=${!canPlace} onClick=${place}><${Ic} n="check"/> تأكيد الطلب</button>
+      ${!canPlace&&S.delivery==='glovo'?html`<p className="muted small">اكتب عنوان التوصيل لنتمكن من إيصال الطلب.</p>`:null}`):null}
+
+    ${tab==='orders'?(mine.length===0?html`<div className="empty"><${Doodles} className="dd" /><${Ic} n="list" style=${{width:'2.5em',height:'2.5em'}}/><b>لا توجد طلبات</b><span className="small">ستظهر طلباتك هنا بعد تأكيدها.</span></div>`:mine.map(o=>html`<${BuyerOrder} key=${o.id} o=${o} S=${S} up=${up} flash=${flash} onChat=${setChatId}/>`)):null}
+
+    ${tab==='chats'?html`<${Inbox} orders=${mine} me="client" nameOf=${o=>(kitchenOf(o.kitchenId)||{name:'مطبخ'}).name} onOpen=${setChatId}/>`:null}
+    </main>
+
+    ${tab==='menu'&&qtyAll?html`<div className="fab"><button className="btn" onClick=${()=>setTab('cart')}><span className="row"><${Ic} n="cart"/> عرض السلة (<span className="num">${qtyAll}</span>)</span><span className="num">${money(T.total)}</span></button></div>`:null}
+
+    <nav className="nav" aria-label="القائمة الرئيسية"><div className="in">
+      <button className="tab" aria-current=${tab==='menu'?'page':null} onClick=${()=>setTab('menu')}><${Ic} n="home"/>الرئيسية</button>
+      <button className="tab" aria-current=${tab==='cart'?'page':null} onClick=${()=>setTab('cart')}><${Ic} n="cart"/>السلة${qtyAll?html`<span className="badge num">${qtyAll}</span>`:null}</button>
+      <button className="tab" aria-current=${tab==='orders'?'page':null} onClick=${()=>setTab('orders')}><${Ic} n="list"/>طلباتي</button>
+      <button className="tab" aria-current=${tab==='chats'?'page':null} onClick=${()=>setTab('chats')}><${Ic} n="msg"/>المحادثات${unreadAll?html`<span className="badge num">${unreadAll}</span>`:null}</button>
+    </div></nav>
+
+    ${chatO?html`<${Chat} o=${chatO} me="client" title=${(kitchenOf(chatO.kitchenId)||{name:'مطبخ'}).name} sub=${'طلب #'+chatO.no} up=${up} onClose=${()=>setChatId(null)}/>`:null}
+    ${pick?html`<${Custom} dish=${pick} onAdd=${o=>addLine(pick,o)} onClose=${()=>setPick(null)}/>`:null}
+    ${added?html`<${Sheet} onClose=${()=>setAdded(false)} title="تمت الإضافة">
+      <div className="row"><span style=${{width:44,height:44,borderRadius:14,background:'var(--chili)',color:'var(--on-chili)',display:'grid',placeItems:'center'}}><${Ic} n="check"/></span><h3>تمت الإضافة إلى السلة</h3></div>
+      <button className="btn big" onClick=${()=>{setAdded(false);setTab('cart');}}><${Ic} n="cart"/> الانتقال إلى السلة والدفع</button>
+      <button className="btn ghost big" onClick=${()=>setAdded(false)}>متابعة التصفح</button><//>`:null}
+    ${conflict?html`<${Sheet} mid=${true} onClose=${()=>setConflict(null)} title="مطبخ آخر">
+      <h3>السلة تحتوي أطباقًا من مطبخ آخر</h3>
+      <p className="muted">يقتصر كل طلب على مطبخ واحد لتسهيل التحضير والتوصيل. هل تريد إفراغ السلة والبدء من هذا المطبخ؟</p>
+      <button className="btn" onClick=${()=>{up({cart:{kitchenId:conflict.dish.kitchenId,lines:[conflict.line]}});setConflict(null);setAdded(true);}}>إفراغ السلة وإضافة الطبق</button>
+      <button className="btn ghost" onClick=${()=>setConflict(null)}>الإبقاء على السلة</button><//>`:null}
+    <${Toast} msg=${msg}/>
+  </div>`;
+}
+
+/* ---------- cook ---------- */
+function CookOrder({o,S,up,onChat}){
+  const next={new:['قبول وبدء الطهي','cook','cooking'],cooking:[o.delivery==='pickup'?'جاهز للاستلام':'خرج للتوصيل','blue','out'],out:['تم التسليم','violet','done']}[o.status];
+  const sysText=next?{cooking:'قبلت الطاهية طلبك وبدأت التحضير',out:o.delivery==='pickup'?'طلبك جاهز للاستلام من المطبخ':'خرج طلبك للتوصيل مع مندوب Glovo',done:'تم تسليم الطلب. بالصحة والهناء!'}[next[2]]:'';
+  const step=()=>up(s=>({orders:s.orders.map(x=>x.id===o.id?{...x,status:next[2],msgs:[...(x.msgs||[]),{id:uid(),from:'sys',type:'sys',text:sysText,at:Date.now()}]}:x)}));
+  const label=o.status==='out'&&o.delivery==='pickup'?STATUS_LABEL.outPickup:STATUS_LABEL[o.status];
+  const cookLabel={new:'طلب جديد',cooking:'قيد التحضير',out:o.delivery==='pickup'?'جاهز للاستلام':'في الطريق',done:'تم التسليم'}[o.status];
+  return html`<article className="card">
+    <div className="row" style=${{justifyContent:'space-between'}}><span className=${'status st-'+o.status}>${cookLabel}</span><span className="muted small num">#${o.no}</span></div>
+    <${OrderItems} o=${o}/>
+    <div className="row wrap"><span className="chip line">${o.delivery==='glovo'?'توصيل Glovo':'يستلمه الزبون من عندك'}</span>
+      ${o.dep?html`<span className="chip saf">ضمانة <span className="num">${o.dep}</span> د.م</span>`:null}
+      <span className="chip line num">${money(o.total)} عند التسليم</span></div>
+    ${o.address?html`<p className="small muted"><${Ic} n="pin"/> ${o.address}</p>`:null}
+    ${next?html`<button className=${'btn big '+next[1]} onClick=${step}><${Ic} n="check"/> ${next[0]}</button>`:null}
+    ${o.status==='done'&&o.dep?html`<button className=${'btn sm '+(o.depositReturned?'ghost':'saf')} onClick=${()=>up(s=>({orders:s.orders.map(x=>x.id===o.id?{...x,depositReturned:!x.depositReturned}:x)}))}>${o.depositReturned?'تم إرجاع الضمانة للزبون':'استلمتُ الأواني وأرجعتُ الضمانة'}</button>`:null}
+    <${ChatButton} o=${o} me="cook" onChat=${onChat}/>
+  </article>`;
+}
+
+function CookDishForm({kid,up,onClose}){
+  const [f,setF]=useState({name:'',price:'',lead:'60',kind:'tagine',clay:false,photo:null});
+  const set=p=>setF(x=>({...x,...p}));
+  const pickPhoto=async e=>{const file=e.target.files&&e.target.files[0];if(!file)return;const p=await readPhoto(file);if(p)set({photo:p});e.target.value='';};
+  const ok=f.name.trim().length>1&&Number(f.price)>0;
+  const add=()=>{
+    up(s=>({dishes:[...s.dishes,{id:'d'+uid(),kitchenId:kid,name:f.name.trim(),price:Math.round(Number(f.price)),kind:f.kind,lead:Math.max(5,Number(f.lead)||60),clay:f.clay,featured:false,available:true,photo:f.photo}]}));
+    onClose();
+  };
+  return html`<${Sheet} onClose=${onClose} title="طبق جديد">
+    <h3>طبق جديد</h3>
+    <div className="field"><span className="lbl">صورة الطبق</span>
+      <div className="photo-prev">${f.photo?html`<img src=${f.photo} alt="صورة الطبق"/>`:html`<${Ic} n="camera" style=${{width:'2.4em',height:'2.4em'}}/>`}</div>
+      <div className="row wrap">
+        <label className="btn sm filebtn"><${Ic} n="camera"/> التقاط بالكاميرا<input type="file" accept="image/*" capture="environment" onChange=${pickPhoto} aria-label="التقاط بالكاميرا"/></label>
+        <label className="btn ghost sm filebtn"><${Ic} n="image"/> من المعرض<input type="file" accept="image/*" onChange=${pickPhoto} aria-label="اختيار من المعرض"/></label></div></div>
+    <div className="field"><label htmlFor="dn">اسم الطبق</label><input id="dn" className="inp" value=${f.name} onInput=${e=>set({name:e.target.value})} placeholder="مثال: طاجين بالبرقوق"/></div>
+    <div className="row"><div className="field grow"><label htmlFor="dp">السعر (د.م)</label><input id="dp" className="inp ltr" inputMode="numeric" value=${f.price} onInput=${e=>set({price:e.target.value.replace(/\D/g,'')})}/></div>
+      <div className="field grow"><label htmlFor="dl">وقت التحضير (دقيقة)</label><input id="dl" className="inp ltr" inputMode="numeric" value=${f.lead} onInput=${e=>set({lead:e.target.value.replace(/\D/g,'')})}/></div></div>
+    <div className="field"><label htmlFor="dk">النوع</label><select id="dk" className="inp" value=${f.kind} onChange=${e=>set({kind:e.target.value})}>${KINDS.map(([k,v])=>html`<option key=${k} value=${k}>${v}</option>`)}</select></div>
+    <button className="opt sq" aria-pressed=${f.clay} onClick=${()=>set({clay:!f.clay})}><span className="dot">${f.clay?html`<${Ic} n="check"/>`:null}</span>يمكن تقديمه في طاجين فخار / قصعة (ضمانة ${DEPOSIT} د.م)</button>
+    <button className="btn big" disabled=${!ok} onClick=${add}><${Ic} n="plus"/> إضافة إلى القائمة</button>
+  <//>`;
+}
+
+function Cook({S,up}){
+  const [tab,setTab]=useState('orders');
+  const [form,setForm]=useState(false);
+  const [del,setDel]=useState(null);
+  const [replying,setReplying]=useState({});
+  const [chatId,setChatId]=useState(null);
+  const [msg,setMsg]=useState('');
+  const flash=t=>{setMsg(t);setTimeout(()=>setMsg(''),2200);};
+  const k=S.kitchens.find(x=>x.id===S.kitchenId);
+  if(!k)return null;
+  const orders=S.orders.filter(o=>o.kitchenId===k.id).sort((a,b)=>b.at-a.at);
+  const dishes=S.dishes.filter(d=>d.kitchenId===k.id);
+  const reviews=S.reviews.filter(r=>r.kitchenId===k.id).slice().reverse();
+  const r=kitchenRating(S,k.id);
+  const groups=[['new','طلبات جديدة','var(--st-new)'],['cooking','قيد التحضير','var(--st-cook)'],['out','في الطريق','var(--st-out)'],['done','مكتملة','var(--st-done)']];
+  const newCount=orders.filter(o=>o.status==='new').length;
+  const unreadAll=orders.reduce((a,o)=>a+unreadOf(o,'cook'),0);
+  const chatO=S.orders.find(o=>o.id===chatId);
+  const demo=()=>{
+    const pool=dishes.filter(d=>d.available);if(!pool.length){flash('أضف طبقًا إلى القائمة أولًا');return;}
+    const d=pool[Math.floor(Math.random()*pool.length)];
+    const clay=d.clay&&Math.random()>.4;
+    const l={id:uid(),dishId:d.id,dish:d,qty:1+Math.floor(Math.random()*2),nosugar:false,nosalt:Math.random()>.6,lowoil:Math.random()>.5,spice:['normal','mild','hot'][Math.floor(Math.random()*3)],pack:clay?'clay':'box',note:Math.random()>.4?'بدون بصل، والصلصة على جنب':''};
+    const items=d.price*l.qty,dep=clay?DEPOSIT*l.qty:0;
+    const delivery=Math.random()>.3?'glovo':'pickup';const dl=delivery==='glovo'?DELIVERY:0;
+    const o={id:uid(),no:S.seq+1,kitchenId:k.id,phone:'0600000000',client:'زبون تجريبي',lines:[l],items,dep,del:dl,total:items+dep+dl,delivery,address:delivery==='glovo'?'حي أكدال، شارع 12، رقم 4':'',status:'new',at:Date.now(),msgs:[{id:uid(),from:'sys',type:'sys',text:'وصل طلب جديد',at:Date.now()-1000},{id:uid(),from:'client',type:'text',text:'السلام عليكم، هل يمكن تقليل الملح قليلًا؟',at:Date.now()}],seen:{},depositReturned:false,reviewed:false};
+    up(s=>({orders:[o,...s.orders],seq:s.seq+1}));flash('وصل طلب تجريبي');
+  };
+  const upd=(id,p)=>up(s=>({dishes:s.dishes.map(d=>d.id===id?{...d,...p}:d)}));
+
+  return html`<div>
+    <${Header} S=${S} up=${up} showCity=${false}/>
+    <main className="page">
+      <section className="banner" style=${{background:'#D9381E',color:'#FFF4E4',cursor:'default',minHeight:'130px'}}>
+        <${Doodles} className="dd"/>
+        <span className="tag" style=${{background:'#F4A81D',color:'#2B1710'}}>${k.name}</span>
+        <h2 style=${{fontSize:'1.45rem',maxWidth:'100%'}}>الله يعطيك الصحة مولات الكوزينة!</h2>
+        <p style=${{maxWidth:'100%'}}>${newCount?'عندك '+newCount+' طلبات جداد كيتسناو':'شوفي الطلبات وبداو الطيب'}</p>
+      </section>
+      <div className="muted small row" style=${{gap:'6px'}}><${Ic} n="pin"/> ${k.city}${r?html` · <span className="star">★</span> <span className="num">${r.avg}</span> <span className="num">(${r.n})</span>`:''}</div>
+
+      ${tab==='orders'?html`
+        <button className="btn saf" onClick=${demo}><${Ic} n="plus"/> طلب تجريبي</button>
+        ${orders.length===0?html`<div className="empty"><${Doodles} className="dd" /><${Ic} n="list" style=${{width:'2.5em',height:'2.5em'}}/><b>لا توجد طلبات حاليًا</b><span className="small">عند وصول طلب سيظهر هنا. يمكنك تجربة طلب تجريبي.</span></div>`:null}
+        ${groups.map(([st,title,col])=>{const g=orders.filter(o=>o.status===st);if(!g.length)return null;return html`<section key=${st} className="stack">
+          <div className="kanban-h"><i style=${{background:col}}></i><h2>${title}</h2><span className="chip num">${g.length}</span></div>
+          ${g.map(o=>html`<${CookOrder} key=${o.id} o=${o} S=${S} up=${up} onChat=${setChatId}/>`)}</section>`;})}`:null}
+
+      ${tab==='chats'?html`<${Inbox} orders=${orders} me="cook" nameOf=${o=>o.client||'زبون'} onOpen=${setChatId}/>`:null}
+
+      ${tab==='menu'?html`
+        <button className="btn" onClick=${()=>setForm(true)}><${Ic} n="plus"/> طبق جديد</button>
+        ${dishes.length===0?html`<div className="empty"><${Doodles} className="dd" /><b>القائمة فارغة</b><span className="small">أضف أول طبق والتقط له صورة.</span></div>`:null}
+        ${dishes.map(d=>html`<article key=${d.id} className="card">
+          <div className="row"><${Thumb} dish=${d} lg=${true}/><div className="grow"><b>${d.name}</b><div className="price num">${money(d.price)}</div>
+            <div className="row wrap" style=${{gap:'6px'}}>${d.featured?html`<span className="tag red">شهية اليوم</span>`:null}${!d.available?html`<span className="chip line">مخفي</span>`:null}${d.clay?html`<span className="chip">فخار</span>`:null}</div></div></div>
+          <div className="row wrap">
+            <button className=${'btn sm '+(d.featured?'saf':'ghost')} onClick=${()=>upd(d.id,{featured:!d.featured})}><${Ic} n="star" fill=${d.featured}/> طبق اليوم</button>
+            <button className="btn sm ghost" onClick=${()=>upd(d.id,{available:!d.available})}>${d.available?'إخفاء':'إظهار'}</button>
+            ${del===d.id?html`<button className="btn sm" onClick=${()=>{up(s=>({dishes:s.dishes.filter(x=>x.id!==d.id),cart:s.cart.lines.some(l=>l.dishId===d.id)?{kitchenId:null,lines:[]}:s.cart}));setDel(null);}}>تأكيد الحذف</button><button className="btn sm ghost" onClick=${()=>setDel(null)}>إلغاء</button>`
+              :html`<button className="btn sm ghost" onClick=${()=>setDel(d.id)}><${Ic} n="trash"/> حذف</button>`}
+          </div></article>`)}`:null}
+
+      ${tab==='reviews'?html`
+        ${reviews.length===0?html`<div className="empty"><${Doodles} className="dd" /><${Ic} n="star" style=${{width:'2.5em',height:'2.5em'}}/><b>لا توجد تقييمات بعد</b><span className="small">ستظهر تقييمات الزبائن هنا.</span></div>`:null}
+        ${reviews.map(rv=>html`<article key=${rv.id} className="card">
+          <div className="row" style=${{justifyContent:'space-between'}}><b>${rv.who}</b><${Stars} n=${rv.stars}/></div>
+          ${rv.text?html`<p>${rv.text}</p>`:null}
+          ${rv.reply?html`<div className="reply"><b className="small">ردّك:</b> ${rv.reply}</div>`
+            :html`<div className="row"><input className="inp grow" aria-label="اكتب ردًا" placeholder="اكتب ردًا على التعليق" value=${replying[rv.id]||''} onInput=${e=>setReplying({...replying,[rv.id]:e.target.value})}/>
+              <button className="btn sm" disabled=${!(replying[rv.id]||'').trim()} onClick=${()=>{up(s=>({reviews:s.reviews.map(x=>x.id===rv.id?{...x,reply:replying[rv.id].trim()}:x)}));}}>إرسال</button></div>`}
+        </article>`)}`:null}
+    </main>
+    <nav className="nav" aria-label="القائمة الرئيسية"><div className="in">
+      <button className="tab" aria-current=${tab==='orders'?'page':null} onClick=${()=>setTab('orders')}><${Ic} n="list"/>الطلبات${newCount?html`<span className="badge num">${newCount}</span>`:null}</button>
+      <button className="tab" aria-current=${tab==='menu'?'page':null} onClick=${()=>setTab('menu')}><${Ic} n="book"/>القائمة</button>
+      <button className="tab" aria-current=${tab==='chats'?'page':null} onClick=${()=>setTab('chats')}><${Ic} n="msg"/>المحادثات${unreadAll?html`<span className="badge num">${unreadAll}</span>`:null}</button>
+      <button className="tab" aria-current=${tab==='reviews'?'page':null} onClick=${()=>setTab('reviews')}><${Ic} n="star"/>التقييمات</button>
+    </div></nav>
+    ${chatO?html`<${Chat} o=${chatO} me="cook" title=${chatO.client||'زبون'} sub=${'طلب #'+chatO.no} up=${up} onClose=${()=>setChatId(null)}/>`:null}
+    ${form?html`<${CookDishForm} kid=${k.id} up=${up} onClose=${()=>setForm(false)}/>`:null}
+    <${Toast} msg=${msg}/>
+  </div>`;
+}
+
+/* ---------- root ---------- */
+function App(){
+  const [S,setS]=useState(load);
+  const up=p=>setS(s=>({...s,...(typeof p==='function'?p(s):p)}));
+  useEffect(()=>{save(S);},[S]);
+  const a=S.auth;
+  if(!a.role)return html`<${Welcome} up=${up}/>`;
+  if(!a.verified)return html`<${Login} S=${S} up=${up}/>`;
+  if(a.role==='cook'){
+    if(!S.kitchenId||!S.kitchens.find(k=>k.id===S.kitchenId))return html`<${CookSetup} S=${S} up=${up}/>`;
+    return html`<${Cook} S=${S} up=${up}/>`;
+  }
+  return html`<${Buyer} S=${S} up=${up}/>`;
+}
+ReactDOM.createRoot(document.getElementById('root')).render(html`<${App}/>`);
+</script>
